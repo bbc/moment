@@ -513,7 +513,9 @@
     var matchTimestamp = /[+-]?\d+(\.\d{1,3})?/; // 123456789 123456789.123
 
     // any word (or two) characters or numbers including two/three word month in arabic.
-    var matchWord = /[0-9]*['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+|[\u0600-\u06FF\/]+(\s*?[\u0600-\u06FF]+){1,2}/i;
+    // includes scottish gaelic two word and hyphenated months
+    var matchWord = /[0-9]*(a[mn]\s?)?['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF\-]+|[\u0600-\u06FF\/]+(\s*?[\u0600-\u06FF]+){1,2}/i;
+
 
     var regexes = {};
 
@@ -5699,6 +5701,81 @@
         ordinalParse: /\d{1,2}(ste|de)/,
         ordinal : function (number) {
             return number + ((number === 1 || number === 8 || number >= 20) ? 'ste' : 'de');
+        },
+        week : {
+            dow : 1, // Monday is the first day of the week.
+            doy : 4  // The week that contains Jan 4th is the first week of the year.
+        }
+    });
+
+    //! moment.js locale configuration
+    //! locale : great britain scottish gealic (gd)
+    //! author : Jon Ashdown : https://github.com/jonashdown
+
+    var gd__months = [
+        'Am Faoilleach',
+        'An Gearran',
+        'Am Màrt',
+        'An Giblean',
+        'An Cèitean',
+        'An t-Ògmhios',
+        'An t-Iuchar',
+        'An Lùnastal',
+        'An t-Sultain',
+        'An Dàmhair',
+        'An t-Samhain',
+        'An Dùbhlachd'
+    ];
+
+    var gd__monthsShort = ['Faoi', 'Gear', 'Màrt', 'Gibl', 'Cèit', 'Ògmh', 'Iuch', 'Lùn', 'Sult', 'Dàmh', 'Samh', 'Dùbh'];
+
+    var weekdays = ['Didòmhnaich', 'Diluain', 'Dimàirt', 'Diciadain', 'Diardaoin', 'Dihaoine', 'Disathairne'];
+
+    var weekdaysShort = ['Did', 'Dil', 'Dim', 'Dic', 'Dia', 'Dih', 'Dis'];
+
+    var weekdaysMin = ['Dò', 'Lu', 'Mà', 'Ci', 'Ar', 'Ha', 'Sa'];
+
+    var gd = _moment__default.defineLocale('gd', {
+        months : gd__months,
+        monthsShort : gd__monthsShort,
+        weekdays : weekdays,
+        weekdaysShort : weekdaysShort,
+        weekdaysMin : weekdaysMin,
+        longDateFormat : {
+            LT : 'HH:mm',
+            LTS : 'HH:mm:ss',
+            L : 'DD/MM/YYYY',
+            LL : 'D MMMM YYYY',
+            LLL : 'D MMMM YYYY HH:mm',
+            LLLL : 'dddd, D MMMM YYYY HH:mm'
+        },
+        calendar : {
+            sameDay : '[An-diugh aig] LT',
+            nextDay : '[A-màireach aig] LT',
+            nextWeek : 'dddd [aig] LT',
+            lastDay : '[An-dè aig] LT',
+            lastWeek : 'dddd [seo chaidh] [aig] LT',
+            sameElse : 'L'
+        },
+        relativeTime : {
+            future : 'ann an %s',
+            past : 'bho chionn %s',
+            s : 'beagan diogan',
+            m : 'mionaid',
+            mm : '%d mionaidean',
+            h : 'uair',
+            hh : '%d uairean',
+            d : 'latha',
+            dd : '%d latha',
+            M : 'mìos',
+            MM : '%d mìosan',
+            y : 'bliadhna',
+            yy : '%d bliadhna'
+        },
+        ordinalParse : /\d{1,2}(d|na|mh)/,
+        ordinal : function (number) {
+            var output = (number === 1) ? 'd' : (number.toString().substr(-1) === '2') ? 'na' : 'mh';
+            return number + output;
         },
         week : {
             dow : 1, // Monday is the first day of the week.
